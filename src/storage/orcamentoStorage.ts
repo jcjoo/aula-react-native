@@ -36,6 +36,17 @@ export default class OrcamentoStorage {
         }
     }
 
+    static async remove(id: string) {
+        try {
+            const orcamentos = await this.get();
+            const listaFiltrada = orcamentos.filter(o => o.id !== id);
+            await this.set(listaFiltrada);
+        } catch (error) {
+            console.error("Erro ao remover orçamento:", error);
+            throw error;
+        }
+    }
+
     static async clear() {
         try {
             await AsyncStorage.removeItem(KEY);

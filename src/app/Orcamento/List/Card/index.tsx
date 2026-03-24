@@ -1,15 +1,36 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View, Alert, Platform } from 'react-native';
 import { Orcamento } from '@/types/Orcamento';
 import styles from './styles';
+import { Trash2 } from 'lucide-react-native';
+import { theme } from '@/theme';
 
 interface Props {
     data: Orcamento;
+    onDelete: () => void;
 }
 
-export function Card({ data }: Props) {
+export function Card({ data, onDelete }: Props) {
     const total = data.itens.reduce((acc: number, item) => acc + (item.precoUnitario * item.quantidade), 0);
     const totalComDesconto = total * (1 - (data.percentualDesconto || 0) / 100);
+
+    const handleDelete = () => {
+        if (Platform.OS === 'web') {
+            const confirmed = window.confirm(`Deseja realmente remover o orçamento "${data.titulo}"?`);
+            if (confirmed) {
+                onDelete();
+            }
+        } else {
+            Alert.alert(
+                "Remover Orçamento",
+                `Deseja realmente remover o orçamento "${data.titulo}"?`,
+                [
+                    { text: "Cancelar", style: "cancel" },
+                    { text: "Remover", onPress: onDelete, style: "destructive" }
+                ]
+            );
+        }
+    };
 
     const getStatusDotStyles = (status: string) => {
         switch (status) {
@@ -61,7 +82,12 @@ export function Card({ data }: Props) {
             </View>
 
             <View style={styles.footer}>
-                <Text style={styles.cliente}>{data.cliente}</Text>
+                <View style={styles.clientInfo}>
+                    <Text style={styles.cliente}>{data.cliente}</Text>
+                    <TouchableOpacity onPress={handleDelete} hitSlop={10}>
+                        <Trash2 size={20} color={theme.colors.feedback.dangerBase} />
+                    </TouchableOpacity>
+                </View>
                 <Text style={styles.total}>
                     <Text style={styles.currency}>R$ </Text>
                     {totalComDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}

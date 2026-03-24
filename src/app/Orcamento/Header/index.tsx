@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { styles } from "./style";
 import Button from "@/components/Button";
 import { Plus } from "lucide-react-native";
@@ -18,7 +18,7 @@ export default function OrcamentosHeader({ onAdd }: Props) {
 
     const handleNewOrcamento = async () => {
         if (!title.trim() || !client.trim()) {
-            return alert("Preencha o título e o cliente!");
+            return Alert.alert("Atenção", "Preencha o título e o cliente!");
         }
 
         const orcamento: Orcamento = {
