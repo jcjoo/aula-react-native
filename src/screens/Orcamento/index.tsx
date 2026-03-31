@@ -2,7 +2,8 @@ import { Alert, Text, View } from "react-native";
 import { styles } from "./styles";
 import OrcamentosHeader from "./Header";
 import OrcamentoList from "./List";
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import OrcamentoStorage from "@/storage/orcamentoStorage";
 import { Orcamento as OrcamentoType } from "@/types/Orcamento";
 
@@ -25,13 +26,15 @@ export default function Orcamento() {
         }
     };
 
-    useEffect(() => {
-        fetchOrcamentos();
-    }, [fetchOrcamentos]);
+    useFocusEffect(
+        useCallback(() => {
+            fetchOrcamentos();
+        }, [fetchOrcamentos])
+    );
 
     return (
         <View style={styles.container}>
-            <OrcamentosHeader onAdd={fetchOrcamentos} />
+            <OrcamentosHeader />
             <OrcamentoList orcamentos={orcamentos} onDelete={handleDelete} />
         </View>
     );

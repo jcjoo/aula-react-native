@@ -9,7 +9,7 @@ import {
     Lato_700Bold
 } from '@expo-google-fonts/lato';
 
-import App from './src/app/Orcamento';
+import App from './src/screens/';
 
 SplashScreen.preventAutoHideAsync();
 
