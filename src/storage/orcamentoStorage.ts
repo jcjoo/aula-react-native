@@ -47,6 +47,17 @@ export default class OrcamentoStorage {
         }
     }
 
+    static async update(orcamento: Orcamento) {
+        try {
+            const orcamentos = await this.get();
+            const lista = orcamentos.map(o => o.id === orcamento.id ? orcamento : o);
+            await this.set(lista);
+        } catch (error) {
+            console.error("Erro ao atualizar orçamento:", error);
+            throw error;
+        }
+    }
+
     static async clear() {
         try {
             await AsyncStorage.removeItem(KEY);

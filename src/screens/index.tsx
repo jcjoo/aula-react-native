@@ -3,6 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Orcamento from './Orcamento';
 import NewOrcamento from './Orcamento/NewOrcamento';
+import DetalheOrcamento from './Orcamento/Detalhe';
+import EditarOrcamento from './Orcamento/EditarOrcamento';
 import { Receipt } from 'lucide-react-native';
 
 const Tab = createBottomTabNavigator();
@@ -17,8 +19,24 @@ function OrcamentosStack() {
                 options={{ headerShown: false }}
             />
             <Stack.Screen
+                name="DetalheOrcamento"
+                component={DetalheOrcamento}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
                 name="NovoOrcamento"
                 component={NewOrcamento}
+                options={{
+                    presentation: 'transparentModal',
+                    headerShown: false,
+                    contentStyle: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    }
+                }}
+            />
+            <Stack.Screen
+                name="EditarOrcamento"
+                component={EditarOrcamento}
                 options={{
                     presentation: 'transparentModal',
                     headerShown: false,
@@ -42,8 +60,6 @@ export default function App() {
                         title: 'Orçamentos',
                         tabBarIcon: ({ color, size }) => <Receipt color={color} size={size} />
                     }}
-
-
                 />
             </Tab.Navigator>
         </NavigationContainer>

@@ -45,11 +45,6 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    clientInfo: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-    },
     cliente: {
         fontFamily: theme.typography.fontFamily.regular,
         fontSize: theme.typography.sizes.textSm,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { X, Minus, Plus, Trash2, Check, Receipt, Pencil } from 'lucide-react-native';
 import { Input } from '@/components/Input';
 import { theme } from '@/theme';
@@ -8,7 +8,7 @@ import OrcamentoStorage from '@/storage/orcamentoStorage';
 import { Orcamento } from '@/types/Orcamento';
 import { ItemServico } from '@/types/ItemServico';
 import { OrcamentoStatus } from '@/types/OrcamentoStatus';
-import styles from './style';
+import styles from './styles';
 
 const STATUS_OPTIONS: { value: OrcamentoStatus; dot: string }[] = [
     { value: 'Rascunho', dot: theme.colors.base.gray400 },
@@ -17,14 +17,16 @@ const STATUS_OPTIONS: { value: OrcamentoStatus; dot: string }[] = [
     { value: 'Recusado', dot: theme.colors.feedback.dangerBase },
 ];
 
-export default function NewOrcamento() {
+export default function EditarOrcamento() {
     const navigation = useNavigation<any>();
+    const route = useRoute<any>();
+    const orcamento: Orcamento = route.params?.orcamento;
 
-    const [titulo, setTitulo] = useState('');
-    const [cliente, setCliente] = useState('');
-    const [status, setStatus] = useState<OrcamentoStatus>('Rascunho');
-    const [itens, setItens] = useState<ItemServico[]>([]);
-    const [desconto, setDesconto] = useState('0');
+    const [titulo, setTitulo] = useState(orcamento.titulo);
+    const [cliente, setCliente] = useState(orcamento.cliente);
+    const [status, setStatus] = useState<OrcamentoStatus>(orcamento.status);
+    const [itens, setItens] = useState<ItemServico[]>([...orcamento.itens]);
+    const [desconto, setDesconto] = useState(String(orcamento.percentualDesconto ?? 0));
 
     const [servicoModalVisible, setServicoModalVisible] = useState(false);
     const [editandoServico, setEditandoServico] = useState<ItemServico | null>(null);
@@ -98,17 +100,16 @@ export default function NewOrcamento() {
             Alert.alert('Atenção', 'Preencha o título e o cliente.');
             return;
         }
-        const orcamento: Orcamento = {
-            id: Date.now().toString(),
+        const updated: Orcamento = {
+            ...orcamento,
             titulo: titulo.trim(),
             cliente: cliente.trim(),
             status,
             itens,
             percentualDesconto: descontoNum,
-            dataCriacao: new Date().toISOString(),
             dataAtualizacao: new Date().toISOString(),
         };
-        await OrcamentoStorage.add(orcamento);
+        await OrcamentoStorage.update(updated);
         navigation.goBack();
     };
 
